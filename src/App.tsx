@@ -1,9 +1,9 @@
 // import logo from './logo.svg';
-import MainPage from './components/main-page/index';
+import MainPage from './components/pages/main-page/index';
 import './App.css';
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
-import NotFound from './components/not-found/index';
+import NotFound from './components/pages/not-found/index';
 
 function App() {
   return (
