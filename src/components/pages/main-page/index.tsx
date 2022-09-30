@@ -7,13 +7,14 @@ import Card from 'components/card';
 
 export default class MainPage extends Component<
   Record<string, never>,
-  { [key: string]: IResponseCard[] | undefined }
+  { cardsData: IResponseCard[] | undefined; search: string; page: number; pages: number }
 > {
   constructor(props: Record<string, never>) {
     super(props);
-    this.state = { cardsData: [] };
+    this.state = { cardsData: [], search: '', page: 1, pages: 0 };
 
     this.apiHandler = this.apiHandler.bind(this);
+    this.handleSearch = this.handleSearch.bind(this);
   }
 
   componentDidMount() {
@@ -22,37 +23,60 @@ export default class MainPage extends Component<
 
   componentWillUnmount() {}
 
+  handleSearch(text: string) {
+    this.setState({ search: text });
+  }
+
   async apiHandler() {
-    const response = await api();
+    const response = await api(this.state.page);
     const data = response?.results;
-    console.log(data);
     this.setState({ cardsData: data?.length !== 0 ? data : [] });
-    console.log('state', this.state);
-    /*
-    setTimeout(() => {
-      console.log('state2', this.state);
-    }, 1000);
-    */
+    this.setState({ pages: response?.info.pages ? response?.info.pages : 0 });
+  }
 
-    // console.log(this.state.cardsData);
-
-    setTimeout(() => {
-      // this.setState({ cardsData: data });
-
-      console.log(this.state);
-    }, 1000);
+  paginationHandler(page: string) {
+    console.log('click');
+    let increment: number;
+    if (page === 'next') increment = 1;
+    if (page === 'prev') increment = -1;
+    this.setState((state, _props) => ({
+      page: state.page + increment,
+    }));
+    this.apiHandler();
   }
 
   render() {
     return (
       <div className={`${styles.main} ${styles.dotted}`}>
         <>
-          <Search />
+          <Search onChangeSearch={this.handleSearch} />
           {this.state.cardsData!.length > 0 ? (
-            <div className={styles.wrapper}>
-              {this.state.cardsData?.map((el) => (
-                <Card cardData={el} key={el.id} />
-              ))}
+            <div className={styles.main}>
+              <div className={styles.wrapper}>
+                {this.state.cardsData
+                  ?.filter((el) => el.name.toLowerCase().includes(this.state.search.toLowerCase()))
+                  .map((el) => (
+                    <Card cardData={el} key={el.id} />
+                  ))}
+              </div>
+              <div className={styles.pagination}>
+                <button
+                  type="button"
+                  className={`${styles.button}`}
+                  onClick={() => this.paginationHandler('prev')}
+                  disabled={this.state.page === 1}
+                >
+                  prev
+                </button>
+                <button
+                  type="button"
+                  className={`${styles.button}`}
+                  onClick={() => this.paginationHandler('next')}
+                  disabled={this.state.pages === this.state.page}
+                >
+                  next
+                </button>
+              </div>
             </div>
           ) : (
             <h2>Loading....</h2>

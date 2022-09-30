@@ -4,8 +4,11 @@
 import styles from './styles.module.scss';
 import React, { PureComponent } from 'react';
 
-export default class Search extends PureComponent<Record<string, never>, { searchWord: string }> {
-  constructor(props: Record<string, never>) {
+export default class Search extends PureComponent<
+  { onChangeSearch: (text: string) => void },
+  { searchWord: string }
+> {
+  constructor(props: { onChangeSearch: (text: string) => void }) {
     super(props);
     this.state = { searchWord: '' };
 
@@ -25,6 +28,7 @@ export default class Search extends PureComponent<Record<string, never>, { searc
     const value = e.target.value;
     this.setState({ searchWord: value });
     localStorage.setItem('search', value);
+    this.props.onChangeSearch(e.target.value);
     console.log(e.target.value, this.state.searchWord);
   }
 
