@@ -50,7 +50,12 @@ export default class MainPage extends Component<
     return (
       <div className={`${styles.main} ${styles.dotted}`}>
         <>
-          <Search onChangeSearch={this.handleSearch} />
+          <div className={styles['search-wrapper']}>
+            <Search onChangeSearch={this.handleSearch} />
+            {this.state.search && (
+              <h2 className={styles['search-text']}>Searching: {this.state.search}</h2>
+            )}
+          </div>
           {this.state.cardsData!.length > 0 ? (
             <div className={styles.main}>
               <div className={styles.wrapper}>
@@ -69,6 +74,7 @@ export default class MainPage extends Component<
                 >
                   prev
                 </button>
+                <div className={`${styles.button} ${styles['page-number']}`}>{this.state.page}</div>
                 <button
                   type="button"
                   className={`${styles.button}`}

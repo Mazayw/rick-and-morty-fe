@@ -48,4 +48,3 @@ export default class Search extends PureComponent<
     );
   }
 }
-// <button type="button">Search</button>

@@ -14,8 +14,13 @@ export default class Card extends Component<{ cardData: IResponseCard }> {
 
   render() {
     return (
-      <div className={styles['card-wrapper']}>
-        <img src={this.card.image} className={styles.image} />
+      <div className={styles['card-wrapper']} data-testid="card">
+        <img
+          src={this.card.image}
+          className={styles.image}
+          alt={this.card.name}
+          title={this.card.name}
+        />
         <div className={styles.text}>
           <div className={styles.name}>{this.card.name}</div>
           <ul className={styles.about}>
@@ -45,21 +50,3 @@ export default class Card extends Component<{ cardData: IResponseCard }> {
     );
   }
 }
-// <button type="button">Search</button>
-
-/*
-export interface IResponseCard {
-  created: string;
-  episode: string[];
-  gender: string;
-  id: number;
-  image: string;
-  location: IResponseCardLocation;
-  name: string;
-  origin: IResponseCardLocation;
-  species: string;
-  status: string;
-  type: string;
-  url: string;
-}
-*/

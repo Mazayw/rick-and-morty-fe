@@ -48,8 +48,13 @@
   justify-content: space-between;
 }
 
+.pagination {
+  display: flex;
+  margin-top: 30px;
+}
+
 .button {
-  width: 320px;
+  width: 190px;
   height: 50px;
   background: #2b303b;
   border: none;
@@ -64,4 +69,15 @@
     background: #b9c3cc;
     color: #ffffff;
   }
+}
+
+.page-number {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80px;
+}
+
+.search-wrapper {
+  height: 50px;
 }

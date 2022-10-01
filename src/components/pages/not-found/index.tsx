@@ -15,5 +15,3 @@ export default class NotFound extends PureComponent {
     );
   }
 }
-
-// <Link to={`contacts/1`}>Your Name</Link>
