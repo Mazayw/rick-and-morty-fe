@@ -1,7 +1,7 @@
 import styles from './styles.module.scss';
 import React, { Component } from 'react';
 import Search from 'components/search';
-import api from '../../api';
+import getPageData from '../../api';
 import { IResponseCard } from '../../interfaces';
 import Card from 'components/card';
 
@@ -28,7 +28,7 @@ export default class MainPage extends Component<
   }
 
   async apiHandler() {
-    const response = await api(this.state.page);
+    const response = await getPageData(this.state.page);
     const data = response?.results;
     this.setState({ cardsData: data?.length !== 0 ? data : [] });
     this.setState({ pages: response?.info.pages ? response?.info.pages : 0 });
@@ -39,6 +39,7 @@ export default class MainPage extends Component<
     let increment: number;
     if (page === 'next') increment = 1;
     if (page === 'prev') increment = -1;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     this.setState((state, _props) => ({
       page: state.page + increment,
     }));

@@ -3,5 +3,59 @@
   margin: 0 auto;
   display: flex;
   align-items: center;
+  justify-content: center;
   flex-direction: column;
+}
+
+.dotted {
+  background-image: -webkit-repeating-radial-gradient(
+    center center,
+    rgba(0, 0, 0, 0.2),
+    rgba(0, 0, 0, 0.2) 1px,
+    transparent 1px,
+    transparent 100%
+  );
+  background-image: -moz-repeating-radial-gradient(
+    center center,
+    rgba(0, 0, 0, 0.2),
+    rgba(0, 0, 0, 0.2) 1px,
+    transparent 1px,
+    transparent 100%
+  );
+  background-image: -ms-repeating-radial-gradient(
+    center center,
+    rgba(0, 0, 0, 0.2),
+    rgba(0, 0, 0, 0.2) 1px,
+    transparent 1px,
+    transparent 100%
+  );
+  background-image: repeating-radial-gradient(
+    center center,
+    rgba(0, 0, 0, 0.2),
+    rgba(0, 0, 0, 0.2) 1px,
+    transparent 1px,
+    transparent 100%
+  );
+  background-size: 30px 30px;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.title {
+  font-size: 10rem;
+}
+
+.subtitle {
+  font-size: 4rem;
+}
+
+.link {
+  font-size: 1.5rem;
+  margin-top: 10px;
+  text-decoration: none;
+  &:active,
+  &:visited,
+  &:hover {
+    color: #000;
+  }
 }

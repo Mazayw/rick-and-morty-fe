@@ -1,6 +1,6 @@
 import { IResponse } from './interfaces';
 
-const api = async (page = 1) => {
+const getPageData = async (page = 1) => {
   try {
     const res = await fetch(`https://rickandmortyapi.com/api/character/?page=${page}`);
     const data = await res.json();
@@ -11,4 +11,4 @@ const api = async (page = 1) => {
   }
 };
 
-export default api;
+export default getPageData;
