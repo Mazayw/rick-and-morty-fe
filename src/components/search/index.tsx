@@ -1,6 +1,3 @@
-// import searchIcon from './icons/search.svg';
-// import searchIcon from '.1./icons/search.svg';
-// import { ReactComponent as YourSvg } from './icons/search.svg';
 import styles from './styles.module.scss';
 import React, { PureComponent } from 'react';
 
