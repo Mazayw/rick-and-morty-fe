@@ -15,13 +15,12 @@ export default class MainPage extends Component<
 
     this.apiHandler = this.apiHandler.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
+    this.paginationHandler = this.paginationHandler.bind(this);
   }
 
   componentDidMount() {
     this.apiHandler();
   }
-
-  componentWillUnmount() {}
 
   handleSearch(text: string) {
     this.setState({ search: text });
@@ -34,13 +33,11 @@ export default class MainPage extends Component<
     this.setState({ pages: response?.info.pages ? response?.info.pages : 0 });
   }
 
-  paginationHandler(page: string) {
-    console.log('click');
-    let increment: number;
-    if (page === 'next') increment = 1;
+  async paginationHandler(page: string) {
+    let increment = 1;
     if (page === 'prev') increment = -1;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    this.setState((state, _props) => ({
+    await this.setState((state, _props) => ({
       page: state.page + increment,
     }));
     this.apiHandler();
