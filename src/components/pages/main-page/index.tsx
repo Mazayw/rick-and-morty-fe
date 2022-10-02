@@ -59,8 +59,10 @@ export default class MainPage extends Component<
           {this.state.cardsData!.length > 0 ? (
             <div className={styles.main}>
               <div className={styles.wrapper}>
-                {this.state.cardsData
-                  ?.filter((el) => el.name.toLowerCase().includes(this.state.search.toLowerCase()))
+                {this.state
+                  .cardsData!.filter((el) =>
+                    el.name.toLowerCase().includes(this.state.search.toLowerCase())
+                  )
                   .map((el) => (
                     <Card cardData={el} key={el.id} />
                   ))}

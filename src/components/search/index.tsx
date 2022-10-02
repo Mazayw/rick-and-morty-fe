@@ -17,6 +17,7 @@ export default class Search extends PureComponent<
 
   componentDidMount() {
     const value = localStorage.getItem('search');
+    this.props.onChangeSearch(value ? value : '');
     this.setState({ searchWord: value ? value : '' });
   }
 
@@ -29,7 +30,6 @@ export default class Search extends PureComponent<
     this.setState({ searchWord: value });
     localStorage.setItem('search', value);
     this.props.onChangeSearch(e.target.value);
-    console.log(e.target.value, this.state.searchWord);
   }
 
   render() {
