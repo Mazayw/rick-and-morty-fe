@@ -1,0 +1,23 @@
+.link {
+  font-size: 1.5rem;
+  margin: 0 20px;
+  text-decoration: none;
+  &:any-link,
+  &:active,
+  &:visited,
+  &:hover {
+    color: #000;
+  }
+}
+
+.active {
+  font-weight: 700;
+}
+
+.header {
+  margin: 0 auto;
+  display: flex;
+  align-items: space-between;
+  justify-items: center;
+  height: 60px;
+}

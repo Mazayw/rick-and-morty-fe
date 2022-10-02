@@ -48,7 +48,7 @@ export default class MainPage extends Component<
 
   render() {
     return (
-      <div className={`${styles.main} ${styles.dotted}`}>
+      <div className={`${styles.main}`}>
         <>
           <div className={styles['search-wrapper']}>
             <Search onChangeSearch={this.handleSearch} />
