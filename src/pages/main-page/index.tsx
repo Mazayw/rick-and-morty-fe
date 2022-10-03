@@ -1,9 +1,9 @@
 import styles from './styles.module.scss';
 import React, { Component } from 'react';
 import Search from 'components/search';
-import getPageData from '../../api';
-import { IResponseCard } from '../../interfaces';
 import Card from 'components/card';
+import getPageData from '../../components/api';
+import { IResponseCard } from 'components/interfaces';
 
 export default class MainPage extends Component<
   Record<string, never>,

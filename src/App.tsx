@@ -1,10 +1,10 @@
-import MainPage from './components/pages/main-page/index';
+import MainPage from './pages/main-page/index';
 import './app.scss';
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
-import NotFound from './components/pages/not-found/index';
+import NotFound from './pages/not-found/index';
 import Menu from 'components/header';
-import About from 'components/pages/about';
+import About from './pages/about';
 
 function App() {
   return (
