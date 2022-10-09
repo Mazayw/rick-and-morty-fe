@@ -10,6 +10,10 @@ const menuItems = [
     link: '/about',
   },
   {
+    name: 'Form',
+    link: '/form',
+  },
+  {
     name: 'Random generated link',
     link: `/${random}`,
   },
