@@ -9,11 +9,9 @@ export default class FormCard extends Component<{
     super(props);
   }
 
-  card = this.props.cardData;
-  reader = new FileReader();
-
   render() {
     const { email, date, select, checkbox, switcher, imagePreviewUrl } = this.props.cardData;
+
     return (
       <div className={styles['card-wrapper']} data-testid="card">
         <div className={styles['image-wrapper']}>
