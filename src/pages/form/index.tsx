@@ -86,7 +86,7 @@ export default class Form extends PureComponent<
     });
 
     this.input.current!.value = '';
-    this.date.current!.value = '';
+    this.date.current!.value = '2022-01-01';
     this.select.current!.value = '';
     this.checkbox.current!.checked = false;
     this.switcher.current!.checked = false;
@@ -115,13 +115,11 @@ export default class Form extends PureComponent<
 
     const reader = new FileReader();
     const file = e.target.files![0];
-    reader.onloadend = (event) => {
+    reader.onloadend = () => {
       this.setState({
         file: file,
         imagePreviewUrl: reader.result,
       });
-
-      console.log(event.target!.result);
     };
 
     reader.readAsDataURL(file);
@@ -138,17 +136,24 @@ export default class Form extends PureComponent<
               ref={this.input}
               className={styles.name}
               onChange={this.onChangeEmail}
+              data-testid="email"
               required
             />
           </label>
           {this.state && this.state['emailError'] && <h2>{this.state.emailError}</h2>}
           <label className={styles['form-data']}>
             Start date:
-            <input type="date" defaultValue="2022-01-01" ref={this.date} required></input>
+            <input
+              type="date"
+              defaultValue="2022-01-01"
+              ref={this.date}
+              data-testid="date"
+              required
+            ></input>
           </label>
           <label className={styles['form-data']}>
             Select charater:
-            <select ref={this.select} required>
+            <select ref={this.select} data-testid="select" required>
               <option value="Rick">Rick</option>
               <option value="Morty">Morty</option>
               <option value="Summer">Summer</option>
@@ -158,18 +163,19 @@ export default class Form extends PureComponent<
           </label>
           <label className={styles['form-data']}>
             I agree to receive news by mail:
-            <input type="checkbox" ref={this.checkbox} required></input>
+            <input type="checkbox" ref={this.checkbox} data-testid="checkbox" required></input>
           </label>
           <div className={`${styles['switch-wrapper']} ${styles['form-data']}`}>
             I agree to receive advertisements:
             <label className={styles.switch}>
-              <input type="checkbox" ref={this.switcher}></input>
+              <input type="checkbox" data-testid="switcher" ref={this.switcher}></input>
               <span className={`${styles.slider} ${styles.round}`}></span>
             </label>
           </div>
           <label className={styles['form-data']}>
             Select a file:
             <input
+              data-testid="file"
               type="file"
               id="myfile"
               name="myfile"
@@ -182,6 +188,7 @@ export default class Form extends PureComponent<
           <input
             type="submit"
             value="Submit"
+            data-testid="submit"
             disabled={this.state.submitDisabled}
             className={styles.button}
           />

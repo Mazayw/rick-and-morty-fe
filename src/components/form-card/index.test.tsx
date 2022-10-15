@@ -4,8 +4,8 @@ import React from 'react';
 import { ICardForm } from 'components/interfaces';
 import cardData from './card-data';
 
-describe('Card', () => {
-  it('Card render', () => {
+describe('Card Form', () => {
+  it('Card Form render', () => {
     render(<FormCard cardData={cardData as ICardForm} />);
     expect(screen.getByText(/e-mail/i)).toBeInTheDocument();
     expect(screen.getByText(/Date/i)).toBeInTheDocument();
