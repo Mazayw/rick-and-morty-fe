@@ -27,3 +27,13 @@ export interface IResponse {
   };
   results: IResponseCard[];
 }
+
+export interface ICardForm {
+  email: string;
+  date: string;
+  select: string;
+  checkbox: boolean;
+  switcher: boolean;
+  file: File;
+  imagePreviewUrl: string | ArrayBuffer | null;
+}
