@@ -131,7 +131,7 @@ export default class Form extends PureComponent<
     return (
       <div className={styles.main}>
         <form onSubmit={this.handleSubmit} className={styles.form}>
-          <label>
+          <label className={styles['form-data']}>
             E-mail:
             <input
               type="text"
@@ -142,11 +142,11 @@ export default class Form extends PureComponent<
             />
           </label>
           {this.state && this.state['emailError'] && <h2>{this.state.emailError}</h2>}
-          <label>
+          <label className={styles['form-data']}>
             Start date:
             <input type="date" defaultValue="2022-01-01" ref={this.date} required></input>
           </label>
-          <label>
+          <label className={styles['form-data']}>
             Select charater:
             <select ref={this.select} required>
               <option value="Rick">Rick</option>
@@ -156,18 +156,18 @@ export default class Form extends PureComponent<
               <option value="Jerry">Jerry</option>
             </select>
           </label>
-          <label>
+          <label className={styles['form-data']}>
             I agree to receive news by mail:
             <input type="checkbox" ref={this.checkbox} required></input>
           </label>
-          <div className={styles['switch-wrapper']}>
+          <div className={`${styles['switch-wrapper']} ${styles['form-data']}`}>
             I agree to receive advertisements:
             <label className={styles.switch}>
               <input type="checkbox" ref={this.switcher}></input>
               <span className={`${styles.slider} ${styles.round}`}></span>
             </label>
           </div>
-          <label>
+          <label className={styles['form-data']}>
             Select a file:
             <input
               type="file"
@@ -179,7 +179,12 @@ export default class Form extends PureComponent<
               ref={this.fileInput}
             ></input>
           </label>
-          <input type="submit" value="Submit" disabled={this.state.submitDisabled} />
+          <input
+            type="submit"
+            value="Submit"
+            disabled={this.state.submitDisabled}
+            className={styles.button}
+          />
         </form>
         <div className={styles['cards-wrapper']}>
           {this.state.cards.length !== 0 &&
