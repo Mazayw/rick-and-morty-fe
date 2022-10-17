@@ -2,45 +2,80 @@ import styles from './styles.module.scss';
 import React, { Component } from 'react';
 import Search from 'components/search';
 import Card from 'components/card';
-import getPageData from '../../components/api';
+import { getPageData, searchByName } from '../../components/api';
 import { IResponseCard } from 'components/interfaces';
 
-export default class MainPage extends Component<
-  Record<string, never>,
-  { cardsData: IResponseCard[] | undefined; search: string; page: number; pages: number }
-> {
-  constructor(props: Record<string, never>) {
-    super(props);
-    this.state = { cardsData: [], search: '', page: 1, pages: 0 };
+// import cardData from '../../components/card copy/card-data';
 
-    this.apiHandler = this.apiHandler.bind(this);
+export default class MainPage extends Component<
+  { handleCloseModal: () => void; handleClickCard: (cardData: IResponseCard) => void },
+  {
+    cardsData: IResponseCard[] | undefined;
+    search: string;
+    page: number;
+    pages: number;
+    prev: string | null;
+    next: string | null;
+    searchText: string;
+  }
+> {
+  constructor(props: {
+    handleCloseModal: () => void;
+    handleClickCard: (cardData: IResponseCard) => void;
+  }) {
+    super(props);
+    this.state = {
+      cardsData: [],
+      search: '',
+      page: 1,
+      pages: 0,
+      prev: null,
+      next: null,
+      searchText: '',
+    };
+
+    this.getPageHandler = this.getPageHandler.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
-    this.paginationHandler = this.paginationHandler.bind(this);
+    this.getSearchResultsHandler = this.getSearchResultsHandler.bind(this);
   }
 
   componentDidMount() {
-    this.apiHandler();
+    this.getPageHandler();
   }
 
-  handleSearch(text: string) {
-    this.setState({ search: text });
+  async handleSearch(text: string) {
+    await this.setState({ search: text });
+    if (text === '') {
+      this.getPageHandler();
+      this.setState({ searchText: '' });
+    }
   }
 
-  async apiHandler() {
-    const response = await getPageData(this.state.page);
+  async getSearchResultsHandler() {
+    const response = await searchByName(this.state.search);
+    this.setState({ searchText: this.state.search });
+    console.log(response);
     const data = response?.results;
-    this.setState({ cardsData: data?.length !== 0 ? data : [] });
-    this.setState({ pages: response?.info.pages ? response?.info.pages : 0 });
+    this.setState({
+      cardsData: data?.length !== 0 ? data : [],
+      pages: response?.info.pages ? response?.info.pages : 0,
+      prev: response!.info.prev,
+      next: response!.info.next,
+      page: 1,
+    });
+    //this.setState({ pages: response?.info.pages ? response?.info.pages : 0 });
   }
 
-  async paginationHandler(page: string) {
-    let increment = 1;
-    if (page === 'prev') increment = -1;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    await this.setState((state, _props) => ({
-      page: state.page + increment,
-    }));
-    this.apiHandler();
+  async getPageHandler(search: string | null = this.state.search) {
+    const response = await getPageData(search);
+    const data = response?.results;
+    console.log(search);
+    this.setState({
+      cardsData: data?.length !== 0 ? data : [],
+      pages: response?.info.pages ? response?.info.pages : 0,
+      prev: response!.info.prev,
+      next: response!.info.next,
+    });
   }
 
   render() {
@@ -48,28 +83,40 @@ export default class MainPage extends Component<
       <div className={`${styles.main}`}>
         <>
           <div className={styles['search-wrapper']}>
-            <Search onChangeSearch={this.handleSearch} />
-            {this.state.search && (
-              <h2 className={styles['search-text']}>Searching: {this.state.search}</h2>
+            <Search
+              onChangeSearch={this.handleSearch}
+              onClickSearch={this.getSearchResultsHandler}
+            />
+            {this.state.searchText && (
+              <h2 className={styles['search-text']}>Searching: {this.state.searchText}</h2>
             )}
           </div>
           {this.state.cardsData!.length > 0 ? (
             <div className={styles.main}>
               <div className={styles.wrapper}>
                 {this.state
-                  .cardsData!.filter((el) =>
-                    el.name.toLowerCase().includes(this.state.search.toLowerCase())
-                  )
+                  .cardsData! //.filter((el) => el.name.toLowerCase().includes(this.state.search.toLowerCase()))     filter items
                   .map((el) => (
-                    <Card cardData={el} key={el.id} />
+                    <Card
+                      cardData={el}
+                      key={el.id}
+                      handleClickCard={(cardData: IResponseCard) =>
+                        this.props.handleClickCard(cardData)
+                      }
+                    />
                   ))}
               </div>
               <div className={styles.pagination}>
                 <button
                   type="button"
                   className={`${styles.button}`}
-                  onClick={() => this.paginationHandler('prev')}
-                  disabled={this.state.page === 1}
+                  onClick={() => {
+                    this.getPageHandler(this.state.prev);
+                    this.setState((state) => {
+                      return { page: state.page - 1 };
+                    });
+                  }}
+                  disabled={this.state.prev === null}
                 >
                   prev
                 </button>
@@ -77,8 +124,13 @@ export default class MainPage extends Component<
                 <button
                   type="button"
                   className={`${styles.button}`}
-                  onClick={() => this.paginationHandler('next')}
-                  disabled={this.state.pages === this.state.page}
+                  onClick={() => {
+                    this.getPageHandler(this.state.next);
+                    this.setState((state) => {
+                      return { page: state.page + 1 };
+                    });
+                  }}
+                  disabled={this.state.next === null}
                 >
                   next
                 </button>

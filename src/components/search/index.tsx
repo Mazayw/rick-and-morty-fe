@@ -2,14 +2,18 @@ import styles from './styles.module.scss';
 import React, { PureComponent } from 'react';
 
 export default class Search extends PureComponent<
-  { onChangeSearch: (text: string) => void },
+  { onChangeSearch: (text: string) => void; onClickSearch: (text: string) => void },
   { searchWord: string }
 > {
-  constructor(props: { onChangeSearch: (text: string) => void }) {
+  constructor(props: {
+    onChangeSearch: (text: string) => void;
+    onClickSearch: (text: string) => void;
+  }) {
     super(props);
     this.state = { searchWord: '' };
 
     this.inputHandler = this.inputHandler.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
   componentDidMount() {
@@ -29,6 +33,13 @@ export default class Search extends PureComponent<
     this.props.onChangeSearch(e.target.value);
   }
 
+  handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === 'Enter') {
+      console.log('object');
+      this.props.onClickSearch(this.state.searchWord);
+    }
+  }
+
   render() {
     return (
       <div className={styles['search-wrapper']}>
@@ -39,8 +50,14 @@ export default class Search extends PureComponent<
           onChange={this.inputHandler}
           placeholder="Search"
           name="search"
+          onKeyDown={this.handleKeyDown}
         />
-        <img src="./icons/search.svg" alt="Search icon" className={styles.icon} />
+        <img
+          src="./icons/search.svg"
+          alt="Search icon"
+          className={styles.icon}
+          onClick={() => this.props.onChangeSearch(this.state.searchWord)}
+        />
       </div>
     );
   }
