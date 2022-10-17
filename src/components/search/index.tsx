@@ -35,7 +35,6 @@ export default class Search extends PureComponent<
 
   handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === 'Enter') {
-      console.log('object');
       this.props.onClickSearch(this.state.searchWord);
     }
   }

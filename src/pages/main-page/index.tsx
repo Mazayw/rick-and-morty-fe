@@ -5,8 +5,6 @@ import Card from 'components/card';
 import { getPageData, searchByName } from '../../components/api';
 import { IResponseCard } from 'components/interfaces';
 
-// import cardData from '../../components/card copy/card-data';
-
 export default class MainPage extends Component<
   { handleCloseModal: () => void; handleClickCard: (cardData: IResponseCard) => void },
   {
@@ -35,8 +33,6 @@ export default class MainPage extends Component<
     };
 
     this.getPageHandler = this.getPageHandler.bind(this);
-    this.handleSearch = this.handleSearch.bind(this);
-    this.getSearchResultsHandler = this.getSearchResultsHandler.bind(this);
   }
 
   componentDidMount() {
@@ -53,8 +49,6 @@ export default class MainPage extends Component<
 
   async getSearchResultsHandler() {
     const response = await searchByName(this.state.search);
-    this.setState({ searchText: this.state.search });
-    console.log(response);
     const data = response?.results;
     this.setState({
       cardsData: data?.length !== 0 ? data : [],
@@ -62,14 +56,13 @@ export default class MainPage extends Component<
       prev: response!.info.prev,
       next: response!.info.next,
       page: 1,
+      searchText: this.state.search,
     });
-    //this.setState({ pages: response?.info.pages ? response?.info.pages : 0 });
   }
 
   async getPageHandler(search: string | null = this.state.search) {
     const response = await getPageData(search);
     const data = response?.results;
-    console.log(search);
     this.setState({
       cardsData: data?.length !== 0 ? data : [],
       pages: response?.info.pages ? response?.info.pages : 0,
@@ -84,8 +77,8 @@ export default class MainPage extends Component<
         <>
           <div className={styles['search-wrapper']}>
             <Search
-              onChangeSearch={this.handleSearch}
-              onClickSearch={this.getSearchResultsHandler}
+              onChangeSearch={(text) => this.handleSearch(text)}
+              onClickSearch={() => this.getSearchResultsHandler()}
             />
             {this.state.searchText && (
               <h2 className={styles['search-text']}>Searching: {this.state.searchText}</h2>
@@ -94,17 +87,15 @@ export default class MainPage extends Component<
           {this.state.cardsData!.length > 0 ? (
             <div className={styles.main}>
               <div className={styles.wrapper}>
-                {this.state
-                  .cardsData! //.filter((el) => el.name.toLowerCase().includes(this.state.search.toLowerCase()))     filter items
-                  .map((el) => (
-                    <Card
-                      cardData={el}
-                      key={el.id}
-                      handleClickCard={(cardData: IResponseCard) =>
-                        this.props.handleClickCard(cardData)
-                      }
-                    />
-                  ))}
+                {this.state.cardsData!.map((el) => (
+                  <Card
+                    cardData={el}
+                    key={el.id}
+                    handleClickCard={(cardData: IResponseCard) =>
+                      this.props.handleClickCard(cardData)
+                    }
+                  />
+                ))}
               </div>
               <div className={styles.pagination}>
                 <button

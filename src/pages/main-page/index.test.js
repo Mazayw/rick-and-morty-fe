@@ -2,6 +2,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import React from 'react';
 import MainPage from '.';
 import { BrowserRouter } from 'react-router-dom';
+import userEvent from '@testing-library/user-event';
 
 describe('MainPage', () => {
   it('render App component', async () => {
@@ -20,13 +21,17 @@ describe('MainPage', () => {
   it('search component', async () => {
     const setItem = jest.spyOn(Storage.prototype, 'setItem');
     const getItem = jest.spyOn(Storage.prototype, 'getItem');
-
     render(<MainPage />, { wrapper: BrowserRouter });
     expect(screen.queryByText(/test /i)).toBeNull();
     expect(screen.getByRole('searchbox')).toBeInTheDocument();
     expect(screen.queryByText(/search/i)).toBeNull();
-    fireEvent.change(screen.getByRole('searchbox'), { target: { value: 'test' } });
-    // expect(screen.getByText(/test/i)).toBeInTheDocument();
+    fireEvent.change(screen.getByRole('searchbox'), { target: { value: 'rick' } });
+    const input = screen.getByRole('searchbox');
+    fireEvent.keyDown(screen.getByRole('searchbox'), { key: 'Enter', keyCode: 13, charCode: 13 });
+    input.focus();
+    await userEvent.keyboard('{enter}');
+    // expect(screen.queryByText(/rick/i)).toBeInTheDocument();
+
     expect(setItem).toHaveBeenCalled();
     expect(getItem).toHaveBeenCalled();
   });
