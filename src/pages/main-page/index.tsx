@@ -49,7 +49,6 @@ export default class MainPage extends Component<
 
   async getSearchResultsHandler() {
     const response = await searchByName(this.state.search);
-    this.setState({ searchText: this.state.search });
     const data = response?.results;
     this.setState({
       cardsData: data?.length !== 0 ? data : [],
@@ -57,6 +56,7 @@ export default class MainPage extends Component<
       prev: response!.info.prev,
       next: response!.info.next,
       page: 1,
+      searchText: this.state.search,
     });
   }
 
