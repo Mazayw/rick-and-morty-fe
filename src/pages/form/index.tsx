@@ -93,15 +93,14 @@ export default class Form extends PureComponent<
     this.fileInput.current!.value = '';
   };
 
-  async emailHandler() {
+  emailHandler() {
     const reg =
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (!reg.test(String(this.input.current?.value).toLowerCase())) {
-      await this.setState({ emailError: 'Invalid Email' });
-      this.setState({ submitDisabled: true });
+      this.setState({ emailError: 'Invalid Email', submitDisabled: true });
       return false;
     } else {
-      await this.setState({ emailError: '' });
+      this.setState({ emailError: '' });
       return true;
     }
   }
