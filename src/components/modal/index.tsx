@@ -16,6 +16,12 @@ export default class Modal extends Component<{
       <div className={styles['modal-back']} onClick={this.props.handleCloseModal}>
         <div className={styles['card-wrapper']} data-testid="card">
           <img
+            src="./icons/close.svg"
+            alt="Search icon"
+            className={styles.close}
+            onClick={() => this.props.handleCloseModal()}
+          />
+          <img
             src={this.card.image}
             className={styles.image}
             alt={this.card.name}

@@ -4,11 +4,11 @@ import Search from 'components/search';
 import Card from 'components/card';
 import { getPageData, searchByName } from '../../components/api';
 import { IResponseCard } from 'components/interfaces';
-import Modal from 'components/modal';
+
 // import cardData from '../../components/card copy/card-data';
 
 export default class MainPage extends Component<
-  Record<string, never>,
+  { handleCloseModal: () => void; handleClickCard: (cardData: IResponseCard) => void },
   {
     cardsData: IResponseCard[] | undefined;
     search: string;
@@ -17,11 +17,12 @@ export default class MainPage extends Component<
     prev: string | null;
     next: string | null;
     searchText: string;
-    clickedCard?: IResponseCard | undefined;
-    isModalShow: boolean;
   }
 > {
-  constructor(props: Record<string, never>) {
+  constructor(props: {
+    handleCloseModal: () => void;
+    handleClickCard: (cardData: IResponseCard) => void;
+  }) {
     super(props);
     this.state = {
       cardsData: [],
@@ -31,7 +32,6 @@ export default class MainPage extends Component<
       prev: null,
       next: null,
       searchText: '',
-      isModalShow: false,
     };
 
     this.getPageHandler = this.getPageHandler.bind(this);
@@ -50,14 +50,6 @@ export default class MainPage extends Component<
       this.setState({ searchText: '' });
     }
   }
-
-  handleClickCard = (cardData: IResponseCard) => {
-    this.setState({ clickedCard: cardData, isModalShow: true });
-  };
-
-  handleCloseModal = () => {
-    this.setState({ isModalShow: false });
-  };
 
   async getSearchResultsHandler() {
     const response = await searchByName(this.state.search);
@@ -89,13 +81,6 @@ export default class MainPage extends Component<
   render() {
     return (
       <div className={`${styles.main}`}>
-        {this.state.isModalShow && (
-          <Modal
-            cardData={this.state.clickedCard!}
-            handleCloseModal={() => this.handleCloseModal()}
-          />
-        )}
-
         <>
           <div className={styles['search-wrapper']}>
             <Search
@@ -115,7 +100,9 @@ export default class MainPage extends Component<
                     <Card
                       cardData={el}
                       key={el.id}
-                      handleClickCard={(cardData: IResponseCard) => this.handleClickCard(cardData)}
+                      handleClickCard={(cardData: IResponseCard) =>
+                        this.props.handleClickCard(cardData)
+                      }
                     />
                   ))}
               </div>

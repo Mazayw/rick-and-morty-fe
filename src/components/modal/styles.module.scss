@@ -7,6 +7,8 @@ li {
   justify-content: center;
   align-items: center;
   position: fixed;
+  top: 0px;
+  left: 0px;
   background-color: rgba(0, 0, 0, 0.24);
   width: 100vw;
   height: 100%;
@@ -18,6 +20,7 @@ li {
   border-radius: 10px;
   margin: 30px;
   width: 340px;
+  position: relative;
 
   &:hover {
     transition: all 300ms;
@@ -54,4 +57,12 @@ li {
 
 .bold {
   font-weight: 700;
+}
+
+.close {
+  position: absolute;
+  width: 40px;
+  height: auto;
+  top: -40px;
+  right: -40px;
 }

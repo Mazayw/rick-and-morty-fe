@@ -20,6 +20,6 @@ describe('Card', () => {
     expect(screen.getByText(/Gender/i)).toBeInTheDocument();
     expect(screen.getByText(/Type/i)).toBeInTheDocument();
     expect(screen.getByText(/Rick Sanchez/i)).toBeInTheDocument();
-    expect(screen.getByRole('img')).toBeInTheDocument();
+    expect(screen.getAllByRole('img')).toHaveLength(2);
   });
 });
