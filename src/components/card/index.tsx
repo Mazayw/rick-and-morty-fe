@@ -2,19 +2,25 @@ import styles from './styles.module.scss';
 import React, { Component } from 'react';
 import { IResponseCard } from 'components/interfaces';
 
-export default class Card extends Component<{ cardData: IResponseCard }> {
-  constructor(props: { cardData: IResponseCard }) {
+export default class Card extends Component<{
+  cardData: IResponseCard;
+  handleClickCard: (cardData: IResponseCard) => void;
+}> {
+  constructor(props: {
+    cardData: IResponseCard;
+    handleClickCard: (cardData: IResponseCard) => void;
+  }) {
     super(props);
   }
   card = this.props.cardData;
 
-  componentDidMount() {}
-
-  componentWillUnmount() {}
-
   render() {
     return (
-      <div className={styles['card-wrapper']} data-testid="card">
+      <div
+        className={styles['card-wrapper']}
+        data-testid="card"
+        onClick={() => this.props.handleClickCard(this.props.cardData)}
+      >
         <img
           src={this.card.image}
           className={styles.image}

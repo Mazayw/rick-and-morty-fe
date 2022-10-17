@@ -1,0 +1,57 @@
+li {
+  list-style-type: none;
+}
+
+.modal-back {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.24);
+  width: 100vw;
+  height: 100%;
+}
+
+.card-wrapper {
+  background-color: rgb(228, 228, 228);
+  padding: 20px;
+  border-radius: 10px;
+  margin: 30px;
+  width: 340px;
+
+  &:hover {
+    transition: all 300ms;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    cursor: pointer;
+  }
+}
+
+.image {
+  border-radius: 10px;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.name {
+  font-weight: 700;
+  font-size: 24px;
+  margin: 10px 0;
+}
+
+.about {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.description {
+  text-align: start;
+}
+
+.bold {
+  font-weight: 700;
+}

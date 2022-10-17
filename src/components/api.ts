@@ -1,8 +1,9 @@
 import { IResponse } from './interfaces';
 
-const getPageData = async (page = 1) => {
+export const getPageData = async (search: string | null) => {
   try {
-    const res = await fetch(`https://rickandmortyapi.com/api/character/?page=${page}`);
+    const urlApi = search ? search : `https://rickandmortyapi.com/api/character/?page=1`;
+    const res = await fetch(urlApi);
     const data = await res.json();
     return data as unknown as IResponse;
   } catch (error) {
@@ -10,4 +11,12 @@ const getPageData = async (page = 1) => {
   }
 };
 
-export default getPageData;
+export const searchByName = async (name: string) => {
+  try {
+    const res = await fetch(`https://rickandmortyapi.com/api/character/?name=${name}`);
+    const data = await res.json();
+    return data as unknown as IResponse;
+  } catch (error) {
+    console.log(error);
+  }
+};

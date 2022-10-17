@@ -1,4 +1,4 @@
-import Card from './';
+import Card from '.';
 import { render, screen } from '@testing-library/react';
 import React from 'react';
 import { IResponseCard } from 'components/interfaces';
@@ -9,8 +9,8 @@ describe('Card', () => {
     render(
       <Card
         cardData={cardData as IResponseCard}
-        handleClickCard={function (cardData: IResponseCard): void {
-          console.log(cardData);
+        handleCloseModal={function (): void {
+          throw new Error('Function not implemented.');
         }}
       />
     );
