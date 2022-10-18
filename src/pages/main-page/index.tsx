@@ -36,7 +36,7 @@ export default class MainPage extends Component<
   }
 
   componentDidMount() {
-    this.getPageHandler();
+    // this.state.search === '' && this.getPageHandler();
   }
 
   async handleSearch(text: string) {
@@ -47,29 +47,45 @@ export default class MainPage extends Component<
     }
   }
 
-  async getSearchResultsHandler() {
-    const response = await searchByName(this.state.search);
-    const data = response?.results;
-    this.setState({
-      cardsData: data?.length !== 0 ? data : [],
-      pages: response?.info.pages ? response?.info.pages : 0,
-      prev: response!.info.prev,
-      next: response!.info.next,
-      page: 1,
-      searchText: this.state.search,
-    });
+  async getSearchResultsHandler(search = this.state.search) {
+    const response = await searchByName(search);
+    if (response?.status === 200) {
+      const data = response?.data.results;
+      this.setState({
+        cardsData: data?.length !== 0 ? data : [],
+        pages: response?.data.info.pages ? response?.data.info.pages : 0,
+        prev: response!.data.info.prev,
+        next: response!.data.info.next,
+        page: 1,
+        searchText: search,
+      });
+    } else {
+      this.setState({
+        cardsData: [],
+      });
+    }
   }
 
-  async getPageHandler(search: string | null = this.state.search) {
-    const response = await getPageData(search);
-    const data = response?.results;
-    this.setState({
-      cardsData: data?.length !== 0 ? data : [],
-      pages: response?.info.pages ? response?.info.pages : 0,
-      prev: response!.info.prev,
-      next: response!.info.next,
-    });
+  async getPageHandler(page: string | null = '') {
+    const response = await getPageData(page);
+    if (response?.status === 200) {
+      const data = response?.data.results;
+      this.setState({
+        cardsData: data?.length !== 0 ? data : [],
+        pages: response?.data.info.pages ? response?.data.info.pages : 0,
+        prev: response!.data.info.prev,
+        next: response!.data.info.next,
+      });
+    } else {
+      this.setState({
+        cardsData: [],
+      });
+    }
   }
+
+  noCardsHandler = () => {
+    return this.state.search === '' ? 'Loading....' : 'Nothing found';
+  };
 
   render() {
     return (
@@ -78,7 +94,8 @@ export default class MainPage extends Component<
           <div className={styles['search-wrapper']}>
             <Search
               onChangeSearch={(text) => this.handleSearch(text)}
-              onClickSearch={() => this.getSearchResultsHandler()}
+              onClickSearch={(value) => this.getSearchResultsHandler(value)}
+              getPageHandler={() => this.getPageHandler()}
             />
             {this.state.searchText && (
               <h2 className={styles['search-text']}>Searching: {this.state.searchText}</h2>
@@ -128,7 +145,7 @@ export default class MainPage extends Component<
               </div>
             </div>
           ) : (
-            <h2>Loading....</h2>
+            <h2>{this.noCardsHandler()}</h2>
           )}
         </>
       </div>

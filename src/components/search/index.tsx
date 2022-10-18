@@ -2,12 +2,17 @@ import styles from './styles.module.scss';
 import React, { PureComponent } from 'react';
 
 export default class Search extends PureComponent<
-  { onChangeSearch: (text: string) => void; onClickSearch: (text: string) => void },
+  {
+    onChangeSearch: (text: string) => void;
+    onClickSearch: (text: string) => void;
+    getPageHandler: () => Promise<void>;
+  },
   { searchWord: string }
 > {
   constructor(props: {
     onChangeSearch: (text: string) => void;
     onClickSearch: (text: string) => void;
+    getPageHandler: () => Promise<void>;
   }) {
     super(props);
     this.state = { searchWord: '' };
@@ -17,10 +22,19 @@ export default class Search extends PureComponent<
   }
 
   componentDidMount() {
-    const value = localStorage.getItem('search');
-    this.props.onChangeSearch(value ? value : '');
-    this.setState({ searchWord: value ? value : '' });
+    this.onLoad();
   }
+
+  onLoad = () => {
+    const value = localStorage.getItem('search');
+    if (value) {
+      this.props.onChangeSearch(value);
+      this.props.onClickSearch(value);
+      this.setState({ searchWord: value });
+    } else {
+      this.props.getPageHandler();
+    }
+  };
 
   componentWillUnmount() {
     localStorage.setItem('search', this.state.searchWord);
