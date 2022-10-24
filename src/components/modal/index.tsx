@@ -7,16 +7,20 @@ export default function Modal({
   handleCloseModal,
 }: {
   cardData: IResponseCard;
-  handleCloseModal: () => void;
+  handleCloseModal: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 }) {
   return (
-    <div className={styles['modal-back']} onClick={handleCloseModal}>
-      <div className={styles['card-wrapper']} data-testid="card">
+    <div className={styles['modal-back']} onClick={(event) => handleCloseModal(event)}>
+      <div
+        className={styles['card-wrapper']}
+        data-testid="card"
+        onClick={(event) => event.stopPropagation()}
+      >
         <img
           src="./icons/close.svg"
-          alt="Search icon"
+          alt="Close icon"
           className={styles.close}
-          onClick={() => handleCloseModal()}
+          onClick={(event) => handleCloseModal(event)}
         />
         <img
           src={cardData.image}

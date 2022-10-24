@@ -1,154 +1,119 @@
 import styles from './styles.module.scss';
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import Search from 'components/search';
 import Card from 'components/card';
 import { getPageData, searchByName } from '../../components/api';
 import { IResponseCard } from 'components/interfaces';
 
-export default class MainPage extends Component<
-  { handleCloseModal: () => void; handleClickCard: (cardData: IResponseCard) => void },
-  {
-    cardsData: IResponseCard[] | undefined;
-    search: string;
-    page: number;
-    pages: number;
-    prev: string | null;
-    next: string | null;
-    searchText: string;
-  }
-> {
-  constructor(props: {
-    handleCloseModal: () => void;
-    handleClickCard: (cardData: IResponseCard) => void;
-  }) {
-    super(props);
-    this.state = {
-      cardsData: [],
-      search: '',
-      page: 1,
-      pages: 0,
-      prev: null,
-      next: null,
-      searchText: '',
-    };
+export default function MainPage({
+  handleClickCard,
+}: {
+  handleClickCard: (cardData: IResponseCard) => void;
+}) {
+  const [cardsData, setCardsData] = useState<IResponseCard[] | never>([]);
+  const [search, setSearch] = useState('');
+  const [page, setPage] = useState(1);
+  const [pages, setPages] = useState(0);
+  const [prev, setPrev] = useState<string | null>(null);
+  const [next, setNext] = useState<string | null>(null);
+  const [searchText, setSearchText] = useState('');
 
-    this.getPageHandler = this.getPageHandler.bind(this);
-  }
+  useEffect(() => {
+    search === '' && getPageHandler();
+  }, []);
 
-  componentDidMount() {
-    // this.state.search === '' && this.getPageHandler();
-  }
-
-  async handleSearch(text: string) {
-    await this.setState({ search: text });
+  const handleSearch = async (text: string) => {
+    await setSearch(text);
     if (text === '') {
-      this.getPageHandler();
-      this.setState({ searchText: '' });
+      getPageHandler();
+      setSearchText('');
     }
-  }
+  };
 
-  async getSearchResultsHandler(search = this.state.search) {
-    const response = await searchByName(search);
+  const getSearchResultsHandler = async (searchValue = search) => {
+    const response = await searchByName(searchValue);
     if (response?.status === 200) {
       const data = response?.data.results;
-      this.setState({
-        cardsData: data?.length !== 0 ? data : [],
-        pages: response?.data.info.pages ? response?.data.info.pages : 0,
-        prev: response!.data.info.prev,
-        next: response!.data.info.next,
-        page: 1,
-        searchText: search,
-      });
+      setCardsData(data?.length !== 0 ? data : []);
+      setPages(response?.data.info.pages ? response?.data.info.pages : 0);
+      setPrev(response!.data.info.prev);
+      setNext(response!.data.info.next);
+      setPage(1);
+      setSearchText(searchValue);
     } else {
-      this.setState({
-        cardsData: [],
-      });
+      setCardsData([]);
     }
-  }
+  };
 
-  async getPageHandler(page: string | null = '') {
+  const getPageHandler = async (page: string | null = '') => {
     const response = await getPageData(page);
     if (response?.status === 200) {
       const data = response?.data.results;
-      this.setState({
-        cardsData: data?.length !== 0 ? data : [],
-        pages: response?.data.info.pages ? response?.data.info.pages : 0,
-        prev: response!.data.info.prev,
-        next: response!.data.info.next,
-      });
+      setCardsData(data?.length !== 0 ? data : []);
+      setPages(response?.data.info.pages ? response?.data.info.pages : 0);
+      setPrev(response!.data.info.prev);
+      setNext(response!.data.info.next);
     } else {
-      this.setState({
-        cardsData: [],
-      });
+      setCardsData([]);
     }
-  }
-
-  noCardsHandler = () => {
-    return this.state.search === '' ? 'Loading....' : 'Nothing found';
   };
 
-  render() {
-    return (
-      <div className={`${styles.main}`}>
-        <>
-          <div className={styles['search-wrapper']}>
-            <Search
-              onChangeSearch={(text) => this.handleSearch(text)}
-              onClickSearch={(value) => this.getSearchResultsHandler(value)}
-              getPageHandler={() => this.getPageHandler()}
-            />
-            {this.state.searchText && (
-              <h2 className={styles['search-text']}>Searching: {this.state.searchText}</h2>
-            )}
-          </div>
-          {this.state.cardsData!.length > 0 ? (
-            <div className={styles.main}>
-              <div className={styles.wrapper}>
-                {this.state.cardsData!.map((el) => (
-                  <Card
-                    cardData={el}
-                    key={el.id}
-                    handleClickCard={(cardData: IResponseCard) =>
-                      this.props.handleClickCard(cardData)
-                    }
-                  />
-                ))}
-              </div>
-              <div className={styles.pagination}>
-                <button
-                  type="button"
-                  className={`${styles.button}`}
-                  onClick={() => {
-                    this.getPageHandler(this.state.prev);
-                    this.setState((state) => {
-                      return { page: state.page - 1 };
-                    });
-                  }}
-                  disabled={this.state.prev === null}
-                >
-                  prev
-                </button>
-                <div className={`${styles.button} ${styles['page-number']}`}>{this.state.page}</div>
-                <button
-                  type="button"
-                  className={`${styles.button}`}
-                  onClick={() => {
-                    this.getPageHandler(this.state.next);
-                    this.setState((state) => {
-                      return { page: state.page + 1 };
-                    });
-                  }}
-                  disabled={this.state.next === null}
-                >
-                  next
-                </button>
-              </div>
+  const noCardsHandler = () => {
+    return search === '' ? 'Loading....' : 'Nothing found';
+  };
+
+  return (
+    <div className={`${styles.main}`}>
+      <>
+        <div className={styles['search-wrapper']}>
+          <Search
+            onChangeSearch={(text) => handleSearch(text)}
+            onClickSearch={(value) => getSearchResultsHandler(value)}
+            getPageHandler={() => getPageHandler()}
+          />
+          {searchText && <h2 className={styles['search-text']}>Searching: {searchText}</h2>}
+        </div>
+        {cardsData!.length > 0 ? (
+          <div className={styles.main}>
+            <div className={styles.wrapper}>
+              {cardsData!.map((el) => (
+                <Card
+                  cardData={el}
+                  key={el.id}
+                  handleClickCard={(cardData: IResponseCard) => handleClickCard(cardData)}
+                />
+              ))}
             </div>
-          ) : (
-            <h2>{this.noCardsHandler()}</h2>
-          )}
-        </>
-      </div>
-    );
-  }
+            <div className={styles.pagination}>
+              <button
+                type="button"
+                className={`${styles.button}`}
+                onClick={() => {
+                  getPageHandler(prev);
+                  setPage((prev) => prev - 1);
+                }}
+                disabled={prev === null}
+              >
+                prev
+              </button>
+              <div className={`${styles.button} ${styles['page-number']}`}>{page}</div>
+              <button
+                type="button"
+                className={`${styles.button}`}
+                onClick={() => {
+                  getPageHandler(next);
+                  setPage((prev) => prev + 1);
+                }}
+                disabled={next === null}
+              >
+                next
+              </button>
+            </div>
+          </div>
+        ) : (
+          <h2>{noCardsHandler()}</h2>
+        )}
+      </>
+    </div>
+  );
 }

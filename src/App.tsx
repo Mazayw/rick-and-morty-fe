@@ -28,7 +28,9 @@ export default class App extends Component<
     document.body.style.overflow = 'hidden';
   };
 
-  handleCloseModal = () => {
+  handleCloseModal = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    event.stopPropagation();
+    event.preventDefault();
     this.setState({ isModalShow: false });
     document.body.style.overflow = 'auto';
   };
@@ -38,7 +40,7 @@ export default class App extends Component<
         {this.state.isModalShow && (
           <Modal
             cardData={this.state.clickedCard!}
-            handleCloseModal={() => this.handleCloseModal()}
+            handleCloseModal={(event) => this.handleCloseModal(event)}
           />
         )}
 
@@ -48,7 +50,6 @@ export default class App extends Component<
               index
               element={
                 <MainPage
-                  handleCloseModal={() => this.handleCloseModal()}
                   handleClickCard={(cardData: IResponseCard) => this.handleClickCard(cardData)}
                 />
               }
