@@ -13,13 +13,13 @@ export default function MainPage({
   const [cardsData, setCardsData] = useState<IResponseCard[] | never>([]);
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
-  const [pages, setPages] = useState(0);
   const [prev, setPrev] = useState<string | null>(null);
   const [next, setNext] = useState<string | null>(null);
   const [searchText, setSearchText] = useState('');
 
   useEffect(() => {
     search === '' && getPageHandler();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSearch = async (text: string) => {
@@ -35,7 +35,6 @@ export default function MainPage({
     if (response?.status === 200) {
       const data = response?.data.results;
       setCardsData(data?.length !== 0 ? data : []);
-      setPages(response?.data.info.pages ? response?.data.info.pages : 0);
       setPrev(response!.data.info.prev);
       setNext(response!.data.info.next);
       setPage(1);
@@ -50,7 +49,6 @@ export default function MainPage({
     if (response?.status === 200) {
       const data = response?.data.results;
       setCardsData(data?.length !== 0 ? data : []);
-      setPages(response?.data.info.pages ? response?.data.info.pages : 0);
       setPrev(response!.data.info.prev);
       setNext(response!.data.info.next);
     } else {
