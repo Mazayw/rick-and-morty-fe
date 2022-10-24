@@ -1,5 +1,5 @@
 import styles from './styles.module.scss';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Search from 'components/search';
 import Card from 'components/card';
 import { getPageData, searchByName } from '../../components/api';
@@ -16,11 +16,6 @@ export default function MainPage({
   const [prev, setPrev] = useState<string | null>(null);
   const [next, setNext] = useState<string | null>(null);
   const [searchText, setSearchText] = useState('');
-
-  useEffect(() => {
-    search === '' && getPageHandler();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const handleSearch = async (text: string) => {
     await setSearch(text);

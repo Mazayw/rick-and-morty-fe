@@ -25,12 +25,12 @@ export default function Form() {
     },
     mode: 'onChange',
   });
-  const onSubmit: SubmitHandler<ICardForm> = (data: ICardForm) => {
+  const onSubmit: SubmitHandler<ICardForm> = (data: ICardForm, e) => {
     setCards((prev: ICardForm[] | never) => [
       ...prev,
       { ...data, imagePreviewUrl: imagePreviewUrl },
     ]);
-    console.log(data);
+    e?.target.reset();
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {

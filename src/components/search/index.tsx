@@ -1,5 +1,5 @@
 import styles from './styles.module.scss';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 export default function Search({
   onChangeSearch,
@@ -11,23 +11,29 @@ export default function Search({
   getPageHandler: () => Promise<void>;
 }) {
   const [searchWord, setSearchWord] = useState('');
+  const inputEl = useRef(null);
 
   useEffect(() => {
     onLoad();
-    return () => {
-      localStorage.setItem('search', searchWord);
-    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    // const search = searchWord;
+    return () => {
+      //if (inputEl.current && inputEl.current!.value)
+      localStorage.setItem('search', searchWord);
+    };
+  }, [searchWord]);
+
   const onLoad = () => {
     const value = localStorage.getItem('search');
+
     if (value) {
       onChangeSearch(value);
       onClickSearch(value);
       setSearchWord(value);
     } else {
-      console.log(false);
       getPageHandler();
     }
   };
@@ -48,6 +54,7 @@ export default function Search({
   return (
     <div className={styles['search-wrapper']}>
       <input
+        ref={inputEl}
         className={styles.search}
         type="search"
         value={searchWord}
