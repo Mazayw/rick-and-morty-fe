@@ -5,7 +5,6 @@ import FormCard from '../../components/form-card/index';
 import { useForm, SubmitHandler } from 'react-hook-form';
 
 export default function Form() {
-  // const [submitDisabled, setSubmitDisabled] = useState(false);
   const [cards, setCards] = useState<ICardForm[] | never>([]);
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string | ArrayBuffer | null>('');
 
@@ -23,7 +22,7 @@ export default function Form() {
       file: undefined,
       imagePreviewUrl: imagePreviewUrl,
     },
-    mode: 'onChange',
+    mode: 'all',
   });
   const onSubmit: SubmitHandler<ICardForm> = (data: ICardForm, e) => {
     setCards((prev: ICardForm[] | never) => [
@@ -105,13 +104,7 @@ export default function Form() {
             onChange={(e) => handleImageChange(e)}
           ></input>
         </label>
-        <input
-          type="submit"
-          value="Submit"
-          data-testid="submit"
-          // disabled={submitDisabled}
-          className={styles.button}
-        />
+        <input type="submit" value="Submit" data-testid="submit" className={styles.button} />
       </form>
       <div className={styles['cards-wrapper']}>
         {cards.length !== 0 &&
