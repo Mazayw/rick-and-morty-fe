@@ -7,10 +7,10 @@ export default function Modal({
   handleCloseModal,
 }: {
   cardData: IResponseCard;
-  handleCloseModal: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+  handleCloseModal: () => void;
 }) {
   return (
-    <div className={styles['modal-back']} onClick={(event) => handleCloseModal(event)}>
+    <div className={styles['modal-back']} onClick={handleCloseModal}>
       <div
         className={styles['card-wrapper']}
         data-testid="card"
@@ -20,7 +20,7 @@ export default function Modal({
           src="./icons/close.svg"
           alt="Close icon"
           className={styles.close}
-          onClick={(event) => handleCloseModal(event)}
+          onClick={handleCloseModal}
         />
         <img
           src={cardData.image}
