@@ -1,6 +1,6 @@
 import MainPage from './pages/main-page/index';
 import styles from './app.module.scss';
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import NotFound from './pages/not-found/index';
 import Menu from 'components/header';
@@ -9,8 +9,8 @@ import Form from './pages/form/index';
 import { IResponseCard } from './components/interfaces';
 import Modal from 'components/modal';
 
-export default class App extends Component<
-  Record<string, never>,
+export default function App() {
+  /*  Record<string, never>,
   {
     clickedCard?: IResponseCard | undefined;
     isModalShow: boolean;
@@ -22,43 +22,40 @@ export default class App extends Component<
       isModalShow: false,
     };
   }
+*/
+  const [clickedCard, setClickedCard] = useState<IResponseCard | undefined>(undefined);
+  const [isModalShow, setIsModalShow] = useState(false);
 
-  handleClickCard = (cardData: IResponseCard) => {
-    this.setState({ clickedCard: cardData, isModalShow: true });
+  const handleClickCard = (cardData: IResponseCard) => {
+    setClickedCard(cardData);
+    setIsModalShow(true);
     document.body.style.overflow = 'hidden';
   };
 
-  handleCloseModal = () => {
-    this.setState({ isModalShow: false });
+  const handleCloseModal = () => {
+    //event.stopPropagation();
+    //event.preventDefault();
+    setIsModalShow(false);
     document.body.style.overflow = 'auto';
   };
-  render() {
-    return (
-      <div className={styles.dotted}>
-        {this.state.isModalShow && (
-          <Modal
-            cardData={this.state.clickedCard!}
-            handleCloseModal={() => this.handleCloseModal()}
-          />
-        )}
 
-        <Routes>
-          <Route path="/" element={<Menu />}>
-            <Route
-              index
-              element={
-                <MainPage
-                  handleCloseModal={() => this.handleCloseModal()}
-                  handleClickCard={(cardData: IResponseCard) => this.handleClickCard(cardData)}
-                />
-              }
-            />
-            <Route path="about" element={<About />} />
-            <Route path="form" element={<Form />} />
-            <Route path="*" element={<NotFound />} />
-          </Route>
-        </Routes>
-      </div>
-    );
-  }
+  return (
+    <div className={styles.dotted}>
+      {isModalShow && <Modal cardData={clickedCard!} handleCloseModal={handleCloseModal} />}
+
+      <Routes>
+        <Route path="/" element={<Menu />}>
+          <Route
+            index
+            element={
+              <MainPage handleClickCard={(cardData: IResponseCard) => handleClickCard(cardData)} />
+            }
+          />
+          <Route path="about" element={<About />} />
+          <Route path="form" element={<Form />} />
+          <Route path="*" element={<NotFound />} />
+        </Route>
+      </Routes>
+    </div>
+  );
 }

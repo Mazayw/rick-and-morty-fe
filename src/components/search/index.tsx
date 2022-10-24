@@ -1,77 +1,74 @@
 import styles from './styles.module.scss';
-import React, { PureComponent } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
-export default class Search extends PureComponent<
-  {
-    onChangeSearch: (text: string) => void;
-    onClickSearch: (text: string) => void;
-    getPageHandler: () => Promise<void>;
-  },
-  { searchWord: string }
-> {
-  constructor(props: {
-    onChangeSearch: (text: string) => void;
-    onClickSearch: (text: string) => void;
-    getPageHandler: () => Promise<void>;
-  }) {
-    super(props);
-    this.state = { searchWord: '' };
+export default function Search({
+  onChangeSearch,
+  onClickSearch,
+  getPageHandler,
+}: {
+  onChangeSearch: (text: string) => void;
+  onClickSearch: (text: string) => void;
+  getPageHandler: () => Promise<void>;
+}) {
+  const [searchWord, setSearchWord] = useState('');
+  const inputEl = useRef(null);
 
-    this.inputHandler = this.inputHandler.bind(this);
-    this.handleKeyDown = this.handleKeyDown.bind(this);
-  }
+  useEffect(() => {
+    onLoad();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  componentDidMount() {
-    this.onLoad();
-  }
+  useEffect(() => {
+    // const search = searchWord;
+    return () => {
+      //if (inputEl.current && inputEl.current!.value)
+      localStorage.setItem('search', searchWord);
+    };
+  }, [searchWord]);
 
-  onLoad = () => {
+  const onLoad = () => {
     const value = localStorage.getItem('search');
+
     if (value) {
-      this.props.onChangeSearch(value);
-      this.props.onClickSearch(value);
-      this.setState({ searchWord: value });
+      onChangeSearch(value);
+      onClickSearch(value);
+      setSearchWord(value);
     } else {
-      this.props.getPageHandler();
+      getPageHandler();
     }
   };
 
-  componentWillUnmount() {
-    localStorage.setItem('search', this.state.searchWord);
-  }
-
-  inputHandler(e: React.ChangeEvent<HTMLInputElement>) {
+  const inputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    this.setState({ searchWord: value });
-    localStorage.setItem('search', value);
-    this.props.onChangeSearch(e.target.value);
-  }
+    setSearchWord(value);
+    // localStorage.setItem('search', value);
+    onChangeSearch(e.target.value);
+  };
 
-  handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      this.props.onClickSearch(this.state.searchWord);
+      onClickSearch(searchWord);
     }
-  }
+  };
 
-  render() {
-    return (
-      <div className={styles['search-wrapper']}>
-        <input
-          className={styles.search}
-          type="search"
-          value={this.state.searchWord}
-          onChange={this.inputHandler}
-          placeholder="Search"
-          name="search"
-          onKeyDown={this.handleKeyDown}
-        />
-        <img
-          src="./icons/search.svg"
-          alt="Search icon"
-          className={styles.icon}
-          onClick={() => this.props.onChangeSearch(this.state.searchWord)}
-        />
-      </div>
-    );
-  }
+  return (
+    <div className={styles['search-wrapper']}>
+      <input
+        ref={inputEl}
+        className={styles.search}
+        type="search"
+        value={searchWord}
+        onChange={inputHandler}
+        placeholder="Search"
+        name="search"
+        onKeyDown={handleKeyDown}
+      />
+      <img
+        src="./icons/search.svg"
+        alt="Search icon"
+        className={styles.icon}
+        onClick={() => onChangeSearch(searchWord)}
+      />
+    </div>
+  );
 }

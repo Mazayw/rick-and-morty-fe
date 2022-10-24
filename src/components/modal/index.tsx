@@ -1,59 +1,59 @@
 import styles from './styles.module.scss';
-import React, { Component } from 'react';
+import React from 'react';
 import { IResponseCard } from 'components/interfaces';
 
-export default class Modal extends Component<{
+export default function Modal({
+  cardData,
+  handleCloseModal,
+}: {
   cardData: IResponseCard;
   handleCloseModal: () => void;
-}> {
-  constructor(props: { cardData: IResponseCard; handleCloseModal: () => void }) {
-    super(props);
-  }
-  card = this.props.cardData;
-
-  render() {
-    return (
-      <div className={styles['modal-back']} onClick={this.props.handleCloseModal}>
-        <div className={styles['card-wrapper']} data-testid="card">
-          <img
-            src="./icons/close.svg"
-            alt="Search icon"
-            className={styles.close}
-            onClick={() => this.props.handleCloseModal()}
-          />
-          <img
-            src={this.card.image}
-            className={styles.image}
-            alt={this.card.name}
-            title={this.card.name}
-          />
-          <div className={styles.text}>
-            <div className={styles.name}>{this.card.name}</div>
-            <ul className={styles.about}>
-              <li className={styles.description}>
-                <span className={styles.bold}>Location: </span>
-                {this.card.location.name}{' '}
-              </li>
-              <li className={styles.description}>
-                <span className={styles.bold}>Origin: </span>
-                {this.card.origin.name}
-              </li>
-              <li className={styles.description}>
-                <span className={styles.bold}>Species: </span>
-                {this.card.species}
-              </li>
-              <li className={styles.description}>
-                <span className={styles.bold}>Gender: </span>
-                {this.card.gender}
-              </li>
-              <li className={styles.description}>
-                <span className={styles.bold}>Type: </span>
-                {this.card.type || 'Unknown'}
-              </li>
-            </ul>
-          </div>
+}) {
+  return (
+    <div className={styles['modal-back']} onClick={handleCloseModal}>
+      <div
+        className={styles['card-wrapper']}
+        data-testid="card"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <img
+          src="./icons/close.svg"
+          alt="Close icon"
+          className={styles.close}
+          onClick={handleCloseModal}
+        />
+        <img
+          src={cardData.image}
+          className={styles.image}
+          alt={cardData.name}
+          title={cardData.name}
+        />
+        <div className={styles.text}>
+          <div className={styles.name}>{cardData.name}</div>
+          <ul className={styles.about}>
+            <li className={styles.description}>
+              <span className={styles.bold}>Location: </span>
+              {cardData.location.name}{' '}
+            </li>
+            <li className={styles.description}>
+              <span className={styles.bold}>Origin: </span>
+              {cardData.origin.name}
+            </li>
+            <li className={styles.description}>
+              <span className={styles.bold}>Species: </span>
+              {cardData.species}
+            </li>
+            <li className={styles.description}>
+              <span className={styles.bold}>Gender: </span>
+              {cardData.gender}
+            </li>
+            <li className={styles.description}>
+              <span className={styles.bold}>Type: </span>
+              {cardData.type || 'Unknown'}
+            </li>
+          </ul>
         </div>
       </div>
-    );
-  }
+    </div>
+  );
 }

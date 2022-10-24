@@ -2,6 +2,7 @@ import Form from '.';
 import { fireEvent, getByTestId, render, screen } from '@testing-library/react';
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
+import { act } from 'react-dom/test-utils';
 
 describe('Form', () => {
   test('render page Form', async () => {
@@ -15,7 +16,10 @@ describe('Form', () => {
     expect(screen.getByText(/news/i)).toBeInTheDocument();
     expect(screen.getByText(/advertisements/i)).toBeInTheDocument();
     expect(screen.getByRole('button')).toBeInTheDocument();
-    fireEvent.change(screen.getByTestId('email'), { target: { value: 'test' } });
+    await act(async () => {
+      fireEvent.change(screen.getByTestId('email'), { target: { value: 'test' } });
+    });
+    expect(screen.queryByText(/invalid/i)).toBeInTheDocument();
     fireEvent.change(screen.getByTestId('date'), { target: { value: '2022-01-05' } });
     fireEvent.change(screen.getByTestId('select'), { target: { value: 'Rick' } });
     fireEvent.change(screen.getByTestId('checkbox'), { target: { checked: true } });
@@ -23,9 +27,10 @@ describe('Form', () => {
     fireEvent.change(screen.getByTestId('file'), { target: { files: [blob] } });
     screen.getByTestId('file'), { target: { files: [blob] } };
     fireEvent.click(getByTestId(container, 'submit'));
-    expect(screen.queryByText(/invalid/i)).toBeInTheDocument();
-    fireEvent.change(screen.getByTestId('email'), { target: { value: 'test@gmail.com' } });
     fireEvent.click(getByTestId(container, 'submit'));
+    await act(async () => {
+      fireEvent.change(screen.getByTestId('email'), { target: { value: 'test@gmail.com' } });
+    });
     expect(screen.queryByText(/invalid/i)).toBeNull();
   });
 });
