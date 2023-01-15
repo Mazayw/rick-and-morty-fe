@@ -3,7 +3,7 @@ import styles from './app.module.scss';
 import React, { useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import NotFound from './pages/not-found/index';
-import Menu from 'components/header';
+import Menu from 'components/menu';
 import About from './pages/about';
 import Form from './pages/form/index';
 import { IResponseCard } from './components/interfaces';

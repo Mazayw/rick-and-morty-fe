@@ -20,3 +20,15 @@ export const searchByName = async (name: string) => {
     console.log(error);
   }
 };
+
+export const getCharacters = async (paramsObj: Record<string, string> = { page: '1' }) => {
+  const searchParams = new URLSearchParams(paramsObj).toString();
+  try {
+    const urlApi = `https://rickandmortyapi.com/api/character/?${searchParams}`;
+    const res = await fetch(urlApi);
+    const data = await res.json();
+    return { data: data as unknown as IResponse, status: res.status };
+  } catch (error) {
+    console.log(error);
+  }
+};

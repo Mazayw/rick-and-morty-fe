@@ -1,6 +1,6 @@
 import React, { useReducer } from 'react';
 import { createContext } from 'react';
-import { initState, reducer, REDUCER_ACTION_TYPE } from './reducer';
+import { initState, reducer, REDUCER_ACTION_TYPE, TReducerAction } from './reducer';
 
 export type IAction = {
   type: REDUCER_ACTION_TYPE;
@@ -8,7 +8,7 @@ export type IAction = {
 
 export type ContextData = {
   state: typeof initState;
-  dispatch: React.Dispatch<IAction>;
+  dispatch: React.Dispatch<TReducerAction>;
 };
 
 const GlobalContext = createContext({} as ContextData);

@@ -71,10 +71,10 @@ export default function MainPage({
           />
           {searchText && <h2 className={styles['search-text']}>Searching: {searchText}</h2>}
         </div>
-        {cardsData!.length > 0 ? (
+        {state.cardsData.length > 0 ? (
           <div className={styles.main}>
             <div className={styles.wrapper}>
-              {cardsData!.map((el) => (
+              {state.cardsData.map((el) => (
                 <Card
                   cardData={el}
                   key={el.id}
@@ -87,23 +87,20 @@ export default function MainPage({
                 type="button"
                 className={`${styles.button}`}
                 onClick={() => {
-                  getPageHandler(prev);
-                  setPage((prev) => prev - 1);
+                  dispatch({ type: REDUCER_ACTION_TYPE.PREV_PAGE });
                 }}
-                disabled={prev === null}
+                disabled={state.page <= 1}
               >
                 prev
               </button>
-              <div className={`${styles.button} ${styles['page-number']}`}>{page}</div>
+              <div className={`${styles.button} ${styles['page-number']}`}>{state.page}</div>
               <button
                 type="button"
                 className={`${styles.button}`}
                 onClick={() => {
-                  getPageHandler(next);
-                  setPage((prev) => prev + 1);
-                  dispatch({ type: REDUCER_ACTION_TYPE.INCREMENT });
+                  dispatch({ type: REDUCER_ACTION_TYPE.NEXT_PAGE });
                 }}
-                disabled={next === null}
+                disabled={state.page >= state.totalPages}
               >
                 next
               </button>
