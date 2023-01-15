@@ -14,7 +14,7 @@ export const enum REDUCER_ACTION_TYPE {
   NEXT_PAGE,
   PREV_PAGE,
   CHANGE_TOTAL_PAGES,
-  NEW_INPUT,
+  CHANGE_SEARCH,
   CHANGE_CARDS_DATA,
 }
 /*
@@ -41,7 +41,7 @@ const reducer = (state: typeof initState, action: TReducerAction): typeof initSt
       return { ...state, page: state.page - 1 };
     case REDUCER_ACTION_TYPE.CHANGE_TOTAL_PAGES:
       return { ...state, totalPages: action.payload as number };
-    case REDUCER_ACTION_TYPE.NEW_INPUT:
+    case REDUCER_ACTION_TYPE.CHANGE_SEARCH:
       return { ...state, search: action.payload as string };
     case REDUCER_ACTION_TYPE.CHANGE_CARDS_DATA:
       return { ...state, cardsData: action.payload as IResponseCard[] };

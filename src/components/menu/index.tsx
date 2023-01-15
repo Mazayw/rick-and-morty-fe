@@ -1,5 +1,5 @@
 import styles from './styles.module.scss';
-import React, { useCallback, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import menuItems from './menu-data';
 import { NavLink, Outlet } from 'react-router-dom';
 import { useGlobalContext } from 'context/context';
@@ -13,6 +13,7 @@ export default function Menu() {
 
   const { state, dispatch } = useGlobalContext();
 
+  /*
   const fetchPage = useCallback(async () => {
     const result = await getCharacters({ page: `${state.page}` });
     if (result?.status === 200) {
@@ -26,24 +27,27 @@ export default function Menu() {
     }
     console.log(state, dispatch);
   }, [dispatch]);
+  */
 
   useEffect(() => {
-    onChangePage();
-  }, [state.page]);
+    const onChangePage = async () => {
+      const searchParams = { page: `${state.page}` };
+      if (state.search) Object.assign(searchParams, { name: state.search });
+      const result = await getCharacters(searchParams);
+      if (result?.status === 200) {
+        dispatch({
+          type: REDUCER_ACTION_TYPE.CHANGE_CARDS_DATA,
+          payload: result.data.results as IResponseCard[],
+        });
+        dispatch({
+          type: REDUCER_ACTION_TYPE.CHANGE_TOTAL_PAGES,
+          payload: result.data.info.pages as number,
+        });
+      }
+    };
 
-  const onChangePage = async () => {
-    const result = await getCharacters({ page: `${state.page}` });
-    if (result?.status === 200) {
-      dispatch({
-        type: REDUCER_ACTION_TYPE.CHANGE_CARDS_DATA,
-        payload: result.data.results as IResponseCard[],
-      });
-      dispatch({
-        type: REDUCER_ACTION_TYPE.CHANGE_TOTAL_PAGES,
-        payload: result.data.info.pages as number,
-      });
-    }
-  };
+    onChangePage();
+  }, [state.page, state.search]);
 
   return (
     <>

@@ -1,8 +1,8 @@
 import styles from './styles.module.scss';
-import React, { useState } from 'react';
+import React from 'react';
 import Search from 'components/search';
 import Card from 'components/card';
-import { getPageData, searchByName } from '../../components/api';
+
 import { IResponseCard } from 'components/interfaces';
 import { useGlobalContext } from 'context/context';
 import { REDUCER_ACTION_TYPE } from 'context/reducer';
@@ -12,64 +12,19 @@ export default function MainPage({
 }: {
   handleClickCard: (cardData: IResponseCard) => void;
 }) {
-  const [cardsData, setCardsData] = useState<IResponseCard[] | never>([]);
-  const [search, setSearch] = useState('');
-  const [page, setPage] = useState(1);
-  const [prev, setPrev] = useState<string | null>(null);
-  const [next, setNext] = useState<string | null>(null);
-  const [searchText, setSearchText] = useState('');
-
   const { state, dispatch } = useGlobalContext();
   console.log(state, dispatch);
 
-  const handleSearch = async (text: string) => {
-    await setSearch(text);
-    if (text === '') {
-      getPageHandler();
-      setSearchText('');
-    }
-  };
-
-  const getSearchResultsHandler = async (searchValue = search) => {
-    const response = await searchByName(searchValue);
-    if (response?.status === 200) {
-      const data = response?.data.results;
-      setCardsData(data?.length !== 0 ? data : []);
-      setPrev(response!.data.info.prev);
-      setNext(response!.data.info.next);
-      setPage(1);
-      setSearchText(searchValue);
-    } else {
-      setCardsData([]);
-    }
-  };
-
-  const getPageHandler = async (page: string | null = '') => {
-    const response = await getPageData(page);
-    if (response?.status === 200) {
-      const data = response?.data.results;
-      setCardsData(data?.length !== 0 ? data : []);
-      setPrev(response!.data.info.prev);
-      setNext(response!.data.info.next);
-    } else {
-      setCardsData([]);
-    }
-  };
-
   const noCardsHandler = () => {
-    return search === '' ? 'Loading....' : 'Nothing found';
+    return state.search === '' ? 'Loading....' : 'Nothing found';
   };
 
   return (
     <div className={`${styles.main}`}>
       <>
         <div className={styles['search-wrapper']}>
-          <Search
-            onChangeSearch={(text) => handleSearch(text)}
-            onClickSearch={(value) => getSearchResultsHandler(value)}
-            getPageHandler={() => getPageHandler()}
-          />
-          {searchText && <h2 className={styles['search-text']}>Searching: {searchText}</h2>}
+          <Search />
+          {state.search && <h2 className={styles['search-text']}>Searching: {state.search}</h2>}
         </div>
         {state.cardsData.length > 0 ? (
           <div className={styles.main}>

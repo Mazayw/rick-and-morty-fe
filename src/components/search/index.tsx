@@ -1,54 +1,32 @@
 import styles from './styles.module.scss';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
+import { useGlobalContext } from 'context/context';
+import { REDUCER_ACTION_TYPE } from 'context/reducer';
 
-export default function Search({
-  onChangeSearch,
-  onClickSearch,
-  getPageHandler,
-}: {
-  onChangeSearch: (text: string) => void;
-  onClickSearch: (text: string) => void;
-  getPageHandler: () => Promise<void>;
-}) {
-  const [searchWord, setSearchWord] = useState('');
+export default function Search() {
   const inputEl = useRef(null);
+  const { state, dispatch } = useGlobalContext();
 
   useEffect(() => {
     onLoad();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    // const search = searchWord;
     return () => {
-      //if (inputEl.current && inputEl.current!.value)
-      localStorage.setItem('search', searchWord);
+      localStorage.setItem('search', state.search);
     };
-  }, [searchWord]);
+  }, [state.search]);
 
   const onLoad = () => {
     const value = localStorage.getItem('search');
-
     if (value) {
-      onChangeSearch(value);
-      onClickSearch(value);
-      setSearchWord(value);
-    } else {
-      getPageHandler();
+      dispatch({ type: REDUCER_ACTION_TYPE.CHANGE_SEARCH, payload: value });
     }
   };
 
   const inputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    setSearchWord(value);
-    // localStorage.setItem('search', value);
-    onChangeSearch(e.target.value);
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      onClickSearch(searchWord);
-    }
+    dispatch({ type: REDUCER_ACTION_TYPE.CHANGE_SEARCH, payload: value });
   };
 
   return (
@@ -57,18 +35,12 @@ export default function Search({
         ref={inputEl}
         className={styles.search}
         type="search"
-        value={searchWord}
+        value={state.search}
         onChange={inputHandler}
         placeholder="Search"
         name="search"
-        onKeyDown={handleKeyDown}
       />
-      <img
-        src="./icons/search.svg"
-        alt="Search icon"
-        className={styles.icon}
-        onClick={() => onChangeSearch(searchWord)}
-      />
+      <img src="./icons/search.svg" alt="Search icon" className={styles.icon} />
     </div>
   );
 }
