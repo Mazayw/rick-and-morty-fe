@@ -4,6 +4,8 @@ import Search from 'components/search';
 import Card from 'components/card';
 import { getPageData, searchByName } from '../../components/api';
 import { IResponseCard } from 'components/interfaces';
+import { useGlobalContext } from 'context/context';
+import { REDUCER_ACTION_TYPE } from 'context/reducer';
 
 export default function MainPage({
   handleClickCard,
@@ -16,6 +18,9 @@ export default function MainPage({
   const [prev, setPrev] = useState<string | null>(null);
   const [next, setNext] = useState<string | null>(null);
   const [searchText, setSearchText] = useState('');
+
+  const { state, dispatch } = useGlobalContext();
+  console.log(state, dispatch);
 
   const handleSearch = async (text: string) => {
     await setSearch(text);
@@ -96,6 +101,7 @@ export default function MainPage({
                 onClick={() => {
                   getPageHandler(next);
                   setPage((prev) => prev + 1);
+                  dispatch({ type: REDUCER_ACTION_TYPE.INCREMENT });
                 }}
                 disabled={next === null}
               >

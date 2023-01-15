@@ -8,6 +8,7 @@ import About from './pages/about';
 import Form from './pages/form/index';
 import { IResponseCard } from './components/interfaces';
 import Modal from 'components/modal';
+import { ContextProvider } from 'context/context';
 
 export default function App() {
   /*  Record<string, never>,
@@ -40,22 +41,26 @@ export default function App() {
   };
 
   return (
-    <div className={styles.dotted}>
-      {isModalShow && <Modal cardData={clickedCard!} handleCloseModal={handleCloseModal} />}
+    <ContextProvider>
+      <div className={styles.dotted}>
+        {isModalShow && <Modal cardData={clickedCard!} handleCloseModal={handleCloseModal} />}
 
-      <Routes>
-        <Route path="/" element={<Menu />}>
-          <Route
-            index
-            element={
-              <MainPage handleClickCard={(cardData: IResponseCard) => handleClickCard(cardData)} />
-            }
-          />
-          <Route path="about" element={<About />} />
-          <Route path="form" element={<Form />} />
-          <Route path="*" element={<NotFound />} />
-        </Route>
-      </Routes>
-    </div>
+        <Routes>
+          <Route path="/" element={<Menu />}>
+            <Route
+              index
+              element={
+                <MainPage
+                  handleClickCard={(cardData: IResponseCard) => handleClickCard(cardData)}
+                />
+              }
+            />
+            <Route path="about" element={<About />} />
+            <Route path="form" element={<Form />} />
+            <Route path="*" element={<NotFound />} />
+          </Route>
+        </Routes>
+      </div>
+    </ContextProvider>
   );
 }
